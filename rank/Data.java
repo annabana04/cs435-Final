@@ -10,6 +10,6 @@ import java.util.regex.*;
 
 import org.apache.hadoop.io.BytesWritable;
 
-public class data {
+public class Data {
     
 }
