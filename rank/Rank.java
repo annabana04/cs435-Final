@@ -18,11 +18,11 @@ public class Rank {
 
         Data.Doc doc = Data.mapPairs(sc, input);
 
-        JavaRDD<String> V = doc.violence.sortByKey(true).map(t -> String.format("%d %.20f", t._1, t._2));
+        JavaRDD<String> V = doc.violence.sortByKey(true).map(t -> String.format("%d %.20f", t._1, t._2)).coalesce(1);
 
         V.saveAsTextFile(outputV);
 
-        JavaRDD<String> W = doc.life.sortByKey(true).map(t -> String.format("%d %.20f", t._1, t._2));
+        JavaRDD<String> W = doc.life.sortByKey(true).map(t -> String.format("%d %.20f", t._1, t._2)).coalesce(1);
 
         W.saveAsTextFile(outputW);
 
