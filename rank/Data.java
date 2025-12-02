@@ -32,23 +32,17 @@ public class Data
         JavaPairRDD<Integer, Integer> violencePair = data.mapToPair(s -> 
         {
             String[] line = s.split(",");
-            if (line[0] != "artist_name")
-            {
-                int year = Integer.parseInt(line[3].trim());
-                int violence = Integer.parseInt(line[8].trim());
-                return new Tuple2<>(year, violence); // takes the year and pairs it with the violence score (year, violence score)
-            }
+            int year = Integer.parseInt(line[3].trim());
+            int violence = Integer.parseInt(line[8].trim());
+            return new Tuple2<>(year, violence); // takes the year and pairs it with the violence score (year, violence score)
         });
 
         JavaPairRDD<Integer, Integer> lifePair = data.mapToPair(s -> 
         {
             String[] line = s.split(",");
-            if (line[0] != "artist_name")
-            {
-                int year = Integer.parseInt(line[3].trim());
-                int life = Integer.parseInt(line[9].trim());
-                return new Tuple2<>(year, life); // takes the year and pairs it with the violence score (year, violence score)
-            }
+            int year = Integer.parseInt(line[3].trim());
+            int life = Integer.parseInt(line[9].trim());
+            return new Tuple2<>(year, life); // takes the year and pairs it with the violence score (year, violence score)
         });
 
         return new Doc(violencePair, lifePair);
