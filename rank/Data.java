@@ -16,41 +16,42 @@ public class Data
 
     public static class Doc 
     {
-        public final JavaPairRDD<Integer, List<Integer>> years;
-        public final JavaPairRDD<Integer, String> columns;
+        public final JavaPairRDD<Integer, List<Integer>> violence;
+        public final JavaPairRDD<Integer, List<Integer>> life;
 
-        public Doc(JavaPairRDD<Integer, List<Integer>> years, JavaPairRDD<Integer, String> columns) 
+        public Doc(JavaPairRDD<Integer, Integer> violence, JavaPairRDD<Integer, Integer> life)
         {
-            this.years = years;
-            this.columns = columns;
+            this.violence = violence;
+            this.life = life;
         }
     }
 
-    public static Doc mapPairs(JavaSparkContext sc, String yearsPath, String columnsPath) 
+    public static Doc mapPairs(JavaSparkContext sc, String dataPath) 
     {
-        JavaRDD<String> years = sc.textFile(yearsPath);
-        JavaRDD<String> columns_txt = sc.textFile(columnsPath);
-        JavaPairRDD<Integer, List<Integer>> pairs = years.mapToPair(s -> 
+        JavaRDD<String> data = sc.textFile(dataPath);
+        JavaPairRDD<Integer, Integer> violencePair = data.mapToPair(s -> 
         {
-            String[] line = s.split(":");
-            int page = Integer.parseInt(line[0].trim());
-            List<Integer> ranks = new ArrayList<>();
-
-            if(line.length > 1 && !line[1].trim().isEmpty()) 
+            String[] line = s.split(",");
+            if (line[0] != "artist_name")
             {
-                for(String l : line[1].trim().split("\\s+")) 
-                {
-                    ranks.add(Integer.parseInt(l));
-                }
+                int year = Integer.parseInt(line[3].trim());
+                int violence = Integer.parseInt(line[8].trim());
+                return new Tuple2<>(year, violence); // takes the year and pairs it with the violence score (year, violence score)
             }
-            return new Tuple2<>(page, ranks); // takes the starting pg number as the key and the page ranks as the values
         });
 
-        // The value pair is the line number as the kay and the title as the value, this means the keys match for pairs (above) and title (below)
-        JavaPairRDD<Integer, String> columns = columns_txt.zipWithIndex()
-                .mapToPair(s -> new Tuple2<>((int) (s._2 + 1), s._1)); // ._1() getter method
+        JavaPairRDD<Integer, Integer> lifePair = data.mapToPair(s -> 
+        {
+            String[] line = s.split(",");
+            if (line[0] != "artist_name")
+            {
+                int year = Integer.parseInt(line[3].trim());
+                int life = Integer.parseInt(line[9].trim());
+                return new Tuple2<>(year, life); // takes the year and pairs it with the violence score (year, violence score)
+            }
+        });
 
-        return new Doc(pairs, columns);
+        return new Doc(violencePair, lifePair);
     }
 
 }
