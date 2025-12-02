@@ -1,15 +1,21 @@
 package rank;
 
-import org.apache.spark.api.java.*;
-import org.apache.spark.SparkConf;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
-import pagerank.Book;
-import scala.Tuple2;
-import java.io.IOException;
-import java.util.*;
-
+import static org.apache.spark.sql.functions.*;
 
 public class Rank {
-    
+
+    public static void main(String[] args) {
+
+        String input = args[0];
+        String output = args[1];
+
+        SparkSession spark = SparkSession.builder().getOrCreate();
+
+        //loader??
+        
+        spark.stop();
+    }
 }

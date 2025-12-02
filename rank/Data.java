@@ -53,5 +53,4 @@ public class Data
 
         return new Doc(violencePair, lifePair);
     }
-
 }
